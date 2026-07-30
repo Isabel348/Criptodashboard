@@ -2424,6 +2424,11 @@
     .topbar { left: 220px; }
   }
 
+  @media (max-width: 1024px) {
+    .topbar-right { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-shrink: 1; min-width: 0; }
+    .tb-search-wrap .tb-search { width: 140px; }
+  }
+
   @media (max-width: 768px) {
     body { padding-left: 0; }
     .sidebar {
@@ -2448,6 +2453,11 @@
     .ranking-tabs { gap: 4px; }
     .ranking-tabs .rtab { padding: 5px 12px; font-size: 11px; }
     .rank-table .r1, .rank-table .r7 { display: none; }
+
+    .tb-search-wrap .tb-search { width: 120px; font-size: 12px; padding: 6px 8px 6px 26px; }
+    #authButtons .tb-btn { font-size: 11px; padding: 5px 10px; }
+    .tb-lang span { display: none; }
+    .topbar-logo span { display: none; }
   }
 
   @media (max-width: 500px) {
@@ -2457,6 +2467,39 @@
     .table-controls .search-inline { width: 100%; }
     .topbar .search-box { width: 100px; }
     .topbar .updated-at { font-size: 10px; }
+
+    .tb-search-wrap .tb-search { width: 80px; }
+    .tb-icon-btn { display: none; }
+    #authButtons .tb-btn { font-size: 10px; padding: 4px 8px; }
+  }
+
+  .sidebar-login {
+    display: none;
+    padding: 16px 20px;
+    border-top: 1px solid var(--border);
+    gap: 8px;
+    flex-direction: column;
+  }
+  .sidebar-login .tb-btn { width: 100%; text-align: center; font-family: var(--font-ui); font-size: 13px; padding: 10px; border-radius: 8px; cursor: pointer; transition: all .2s; border: none; }
+  .sidebar-login .tb-btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  .sidebar-login .tb-btn-solid { background: var(--accent); color: #000; font-weight: 700; }
+  .sidebar-login .tb-btn-outline:hover { border-color: var(--text-dim); }
+  .sidebar-login .tb-btn-solid:hover { opacity: .85; }
+  .sidebar-logged-in {
+    display: none;
+    padding: 12px 20px;
+    border-top: 1px solid var(--border);
+    align-items: center;
+    gap: 10px;
+  }
+  .sidebar-logged-in img { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
+  .sidebar-logged-in .sl-name { font-size: 13px; font-weight: 600; color: var(--text); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sidebar-logged-in .sl-logout { background: none; border: none; color: var(--red); cursor: pointer; font-size: 11px; padding: 4px 8px; border-radius: 4px; font-family: var(--font-ui); }
+  .sidebar-logged-in .sl-logout:hover { background: rgba(255,51,102,.1); }
+
+  @media (max-width: 768px) {
+    .sidebar-login { display: flex; }
+    .sidebar-logged-in { display: flex; }
   }
 
   /* =============================================
@@ -3053,6 +3096,15 @@
 
     <li><a href="#"><span class="icon">&#x25A0;</span> Acerca de</a></li>
   </ul>
+  <div class="sidebar-login" id="sidebarLogin">
+    <button class="tb-btn tb-btn-outline" onclick="document.getElementById('btnLogin').click()">Iniciar sesi&oacute;n</button>
+    <button class="tb-btn tb-btn-solid" onclick="document.getElementById('btnRegister').click()">Registrarse</button>
+  </div>
+  <div class="sidebar-logged-in" id="sidebarLoggedIn">
+    <img id="sidebarAvatar" src="" alt="">
+    <span class="sl-name" id="sidebarName"></span>
+    <button class="sl-logout" onclick="document.getElementById('btnLogout').click()">Salir</button>
+  </div>
   <div class="sidebar-footer">
     <div class="indicator">
       <span class="dot"></span>
@@ -4536,6 +4588,12 @@
     userName.textContent = user.name.split(' ')[0];
     udName.textContent = user.name;
     udEmail.textContent = user.email;
+
+    document.getElementById('sidebarLogin').style.display = 'none';
+    var sli = document.getElementById('sidebarLoggedIn');
+    sli.style.display = 'flex';
+    document.getElementById('sidebarAvatar').src = userAvatar.src;
+    document.getElementById('sidebarName').textContent = user.name.split(' ')[0];
   }
 
   function showLoggedOut() {
@@ -4543,6 +4601,9 @@
     userMenu.classList.remove('logged-in');
     userDropdown.classList.remove('open');
     localStorage.removeItem('crypto_user');
+
+    document.getElementById('sidebarLogin').style.display = 'flex';
+    document.getElementById('sidebarLoggedIn').style.display = 'none';
   }
 
   userAvatar.addEventListener('click', function(e) {
