@@ -1,0 +1,1 @@
+require('http').createServer((q,r)=>{var f=require('fs'),p='.'+(q.url==='/'?'/index.html':q.url);if(!f.existsSync(p)){r.writeHead(404);return r.end()}r.writeHead(200,{'Content-Type':'text/html'});r.end(f.readFileSync(p));}).listen(5500,()=>console.log('http://localhost:5500'));
